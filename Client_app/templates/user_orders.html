@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Orders</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; }
+    .orders-container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 18px rgba(44,62,80,0.07); padding: 30px; }
+    h2 { color: #2f4f2f; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: left; }
+    th { background: #f3f3f3; }
+    tr:last-child td { border-bottom: none; }
+    .status-pending { color: #d97706; font-weight: 600; }
+    .status-approved { color: #15803d; font-weight: 600; }
+    .status-rejected { color: #b91c1c; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="orders-container">
+    <h2>Your Previous Orders</h2>
+    {% if orders %}
+      <table>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Ordered On</th>
+          <th>Status</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.product.name }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.order_date|date:"M d, Y H:i" }}</td>
+          <td>
+            <span class="
+              {% if order.status == 'pending' %}status-pending
+              {% elif order.status == 'approved' %}status-approved
+              {% elif order.status == 'rejected' %}status-rejected
+              {% endif %}
+            ">
+              {{ order.status|title }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>You have not placed any orders yet.</p>
+    {% endif %}
+    <a href="{% url 'home' %}">Back to Home</a>
+  </div>
+</body>
+</html>

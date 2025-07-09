@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Cart - ShopEase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #2f4f2f;
+      color: #fff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    header nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    header nav a:hover {
+      color: #d4ed91;
+    }
+
+    .cart-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-container h2 {
+      margin-bottom: 25px;
+      color: #2f4f2f;
+      text-align: center;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+
+    .cart-item img {
+      width: 100px;
+      border-radius: 8px;
+    }
+
+    .item-details {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .item-details h4 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .item-details p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .item-quantity input {
+      width: 40px;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .item-price {
+      font-weight: bold;
+      font-size: 16px;
+      color: #2f4f2f;
+    }
+
+    .remove-btn {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background-color: #e60000;
+    }
+
+    .total-section {
+      margin-top: 30px;
+      text-align: right;
+    }
+
+    .total-section h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .checkout-btn {
+      background-color: #708238;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background-color: #5e6f2b;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2f4f2f;
+      color: #eee;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .item-details {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+
+      .item-quantity {
+        margin-top: 10px;
+      }
+
+      .total-section {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">ShopEase</div>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="#">Products</a>
+      <a href="{% url 'cart' %}">Cart</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+  </header>
+
+  <div class="cart-container">
+  <h2>My Shopping Cart</h2>
+
+  {% if cart_products %}
+    {% for item in cart_products %}
+      <div class="cart-item">
+        {% if item.product.product_image %}
+          <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}">
+        {% else %}
+          <img src="https://via.placeholder.com/100x100?text=No+Image" alt="No Image">
+        {% endif %}
+        <div class="item-details">
+          <h4>{{ item.product.name }}</h4>
+          <p>Category: {{ item.product.category }}</p>
+        </div>
+        <div class="item-quantity">
+          <form action="{% url 'update_cart' item.product.id %}" method="post" style="display:flex; align-items:center; gap:5px;">
+            {% csrf_token %}
+            <label>Qty:</label>
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width:40px;">
+            <button type="submit" class="checkout-btn" style="padding:6px 12px; font-size:14px;">Update</button>
+          </form>
+        </div>
+        <div class="item-price">₹{{ item.product.price|floatformat:2 }}</div>
+        <form action="{% url 'buy_now' item.product.id %}" method="post" style="display:inline;" onsubmit="confirmOrder(event)">
+          {% csrf_token %}
+          <button type="submit" class="checkout-btn" style="margin-left:10px;">Buy Now</button>
+        </form>
+        <form action="{% url 'remove_from_cart' item.product.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="remove-btn" style="margin-left:10px;">Remove</button>
+        </form>
+      </div>
+    {% endfor %}
+
+    <div class="total-section">
+      <h3>Total: ₹{{ total|floatformat:2 }}</h3>
+      <form action="{% url 'order_confirmation' %}" method="post" style="display:inline;" onsubmit="confirmOrder(event)">
+        {% csrf_token %}
+        <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+      </form>
+    </div>
+  {% else %}
+    <p>Your cart is empty.</p>
+  {% endif %}
+</div>
+
+<script>
+  function confirmOrder(event) {
+    if (!confirm("Are you sure you want to place this order?")) {
+      event.preventDefault();
+    }
+  }
+</script>
+
+</body>
+</html>

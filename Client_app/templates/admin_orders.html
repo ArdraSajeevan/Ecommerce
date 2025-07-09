@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Orders - eCommerce</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <h2 class="text-2xl font-semibold mb-6">Order Details</h2>
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="bg-gray-100 text-left">
+            <th class="px-4 py-2">Order ID</th>
+            <th class="px-4 py-2">User</th>
+            <th class="px-4 py-2">Product</th>
+            <th class="px-4 py-2">Quantity</th>
+            <th class="px-4 py-2">Ordered Date</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr class="border-t hover:bg-gray-50">
+            <td class="px-4 py-2">{{ order.id }}</td>
+            <td class="px-4 py-2">{{ order.user.username }}</td>
+            <td class="px-4 py-2">{{ order.product.name }}</td>
+            <td class="px-4 py-2">{{ order.quantity }}</td>
+            <td class="px-4 py-2">{{ order.order_date|date:"M d, Y H:i" }}</td>
+            <td class="px-4 py-2">
+              <span id="status-{{ order.id }}"
+                    class="font-semibold {% if order.status == 'approved' %}text-green-600{% elif order.status == 'rejected' %}text-red-600{% else %}text-yellow-500{% endif %}">
+                {{ order.status|title }}
+              </span>
+            </td>
+            <td class="px-4 py-2 space-x-2">
+              <button onclick="updateStatus('{{ order.id }}', 'approve')"
+                      class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Approve</button>
+              <button onclick="updateStatus('{{ order.id }}', 'reject')"
+                      class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Reject</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <a href="{% url 'admin_dashboard' %}" class="mt-6 inline-block text-blue-600 hover:underline">Back to Dashboard</a>
+
+  <script>
+    function updateStatus(orderId, action) {
+      fetch(`/dashboard/orders/${action}/${orderId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(data => {
+        const statusElement = document.getElementById(`status-${orderId}`);
+        if (statusElement) {
+          statusElement.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+          statusElement.className = 'font-semibold';
+          if (data.status === 'approved') {
+            statusElement.classList.add('text-green-600');
+          } else if (data.status === 'rejected') {
+            statusElement.classList.add('text-red-600');
+          } else {
+            statusElement.classList.add('text-yellow-500');
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f5f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .confirmation-box {
+      background-color: white;
+      padding: 40px 32px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+    .confirmation-box h1 {
+      color: #2f4f2f;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    .confirmation-box p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+    .confirmation-box .icon {
+      font-size: 60px;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    .order-details {
+      text-align: left;
+      margin: 30px 0 20px 0;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 18px 18px 10px 18px;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+    }
+    .order-details h3 {
+      margin-top: 0;
+      color: #28a745;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .order-details img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 16px;
+      vertical-align: middle;
+    }
+    .order-details .product-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .order-details .product-info {
+      flex: 1;
+    }
+    .order-details .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 15px;
+    }
+    .order-details .summary-row.total {
+      font-weight: bold;
+      color: #2f4f2f;
+      font-size: 17px;
+    }
+    .user-info {
+      background: #f3f3f3;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      text-align: left;
+      font-size: 15px;
+    }
+    .confirmation-box .continue-shopping {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 24px;
+      background: #28a745;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .confirmation-box .continue-shopping:hover {
+      background: #218838;
+    }
+    .confirmation-box .secondary {
+      background-color: #ddd;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .confirmation-box .secondary:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation-box">
+    <div class="icon">✅</div>
+    <h1>Thank You for Your Purchase!</h1>
+    <p>Your order has been placed successfully. You will receive a confirmation email shortly.</p>
+
+    <div class="order-details">
+      <h3>Order Summary</h3>
+      {% for item in cart_products %}
+        <div class="product-row">
+          {% if item.product.product_image %}
+            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}">
+          {% else %}
+            <img src="https://via.placeholder.com/80x80?text=No+Image" alt="No Image">
+          {% endif %}
+          <div class="product-info">
+            <div><strong>{{ item.product.name }}</strong></div>
+            <div>Price: ₹{{ item.product.price }}</div>
+            <div>Quantity: {{ item.quantity }}</div>
+            <div>Subtotal: ₹{{ item.subtotal }}</div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="summary-row total">
+        <span>Total:</span>
+        <span>₹{{ total }}</span>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <strong>Shipping To:</strong><br>
+      {% if user.is_authenticated %}
+        {{ user.first_name }} {{ user.last_name }}<br>
+        {{ user.email }}<br>
+        <!-- Add address if available -->
+      {% else %}
+        Guest User
+      {% endif %}
+    </div>
+
+    <a href="{% url 'home' %}" class="continue-shopping">Continue Shopping</a>
+    <a href="{% url 'admin_orders' %}" class="secondary">View Order Details</a>
+  </div>
+</body>
+</html>

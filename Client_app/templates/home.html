@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ShopEase - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #2f4f2f;
+      color: #fff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav a {
+      margin-left: 15px;
+      color: #f0f0f0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #d4ed91;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, #a2d2ff, #d4ed91);
+      padding: 18px 20px; /* Even smaller for less height */
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 28px; /* Reduced from 40px to 28px */
+      margin-bottom: 8px; /* Slightly reduced */
+      color: #2f4f2f;
+    }
+
+    .hero p {
+      font-size: 16px; /* Slightly reduced */
+      color: #444;
+    }
+
+    /* Products Section */
+    .products-section {
+      padding: 20px 30px 50px 30px; /* Reduce top padding from 50px to 20px */
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .products-section h3 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #2f4f2f;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .product-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px; /* Reduce image height for a more compact look */
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .product-info h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .product-info p {
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .product-info-btn {
+      padding: 12px 28px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      display: inline-block;
+      font-size: 16px;
+      min-width: 140px;
+      box-sizing: border-box;
+    }
+
+    .product-info-btn:hover {
+      background-color: #218838;
+      box-shadow: 0 2px 8px rgba(40,167,69,0.15);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2f4f2f;
+      color: #eee;
+      margin-top: 50px;
+    }
+
+    /* Filter Form */
+    .filter-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      background: #fff;
+      padding: 18px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(44, 62, 80, 0.07);
+      max-width: 900px;
+      margin: 16px auto 16px auto; /* Reduce vertical margin */
+      flex-wrap: wrap;
+    }
+
+    .filter-form input[type="text"],
+    .filter-form input[type="number"],
+    .filter-form select {
+      padding: 10px 14px;
+      border: 1.5px solid #d4ed91;
+      border-radius: 7px;
+      font-size: 15px;
+      background: #f7fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-width: 140px;
+    }
+
+    .filter-form input[type="text"]:focus,
+    .filter-form input[type="number"]:focus,
+    .filter-form select:focus {
+      border-color: #28a745;
+      background: #fff;
+      box-shadow: 0 0 6px rgba(40,167,69,0.10);
+    }
+
+    .filter-form button {
+      padding: 10px 28px;
+      background: linear-gradient(90deg, #56ab2f 0%, #a8e063 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(88, 175, 85, 0.10);
+    }
+
+    .filter-form button:hover {
+      background: linear-gradient(90deg, #4e944f 0%, #8fd19e 100%);
+      box-shadow: 0 4px 16px rgba(88, 175, 85, 0.13);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .navbar-right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      nav a {
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header / Navbar -->
+  <header>
+    <div class="logo">ShopEase</div>
+    <div class="navbar-right">
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Products</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="{% url 'cart' %}">Cart</a>
+        <a href="{% url 'user_orders' %}">Orders</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h2>Welcome to ShopEase</h2>
+    <p>Find the best products at the most affordable prices.</p>
+  </div>
+
+  <!-- Filter by Category -->
+  <form method="get" action="{% url 'home' %}" class="filter-form">
+    <input type="text" name="name" placeholder="Search by product name" value="{{ request.GET.name }}">
+    <select name="category">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+    <button type="submit">Apply</button>
+  </form>
+
+  <!-- Products -->
+  <section class="products-section">
+    <h3>Featured Products</h3>
+    <div class="products">
+      {% for product in products %}
+        <div class="product-card">
+          {% if product.product_image %}
+            <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No Image">
+          {% endif %}
+          <div class="product-info">
+            <h4>{{ product.name }}</h4>
+            <p>₹{{ product.price }}</p>
+            <p>Stock: {{ product.stock }}</p>
+            <div class="product-actions" style="display: flex; justify-content: center; margin-top: 10px;">
+              <a href="{% url 'product_detail' product.id %}" class="product-info-btn">Product Info</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No products available.</p>
+      {% endfor %}
+    </div>
+  </section>
+</body>
+</html>

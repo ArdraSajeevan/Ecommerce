@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ product.name }} - ShopEase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      align-items: flex-start;
+    }
+
+    .product-image {
+      flex: 1 1 400px;
+    }
+
+    .product-image img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      max-height: 500px;
+    }
+
+    .product-details {
+      flex: 1 1 400px;
+    }
+
+    .product-details h1 {
+      font-size: 32px;
+      color: #2f4f2f;
+      margin-bottom: 15px;
+    }
+
+    .product-details .price {
+      font-size: 24px;
+      color: #4a7023;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .product-details p.description {
+      margin: 15px 0;
+      font-size: 16px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .add-to-cart {
+      margin-top: 20px;
+    }
+
+    .add-to-cart button {
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #708238;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .add-to-cart button:hover {
+      background-color: #5e6f2b;
+    }
+
+    .back-link {
+      margin-top: 30px;
+      display: inline-block;
+      text-decoration: none;
+      color: #2f4f2f;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .product-display {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="product-display">
+      <div class="product-image">
+        {% if product.product_image %}
+          <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <img src="https://via.placeholder.com/500x500?text=No+Image" alt="No Image">
+        {% endif %}
+      </div>
+
+      <div class="product-details">
+        <h1>{{ product.name }}</h1>
+        <div class="price">₹{{ product.price }}</div>
+        <p class="description">{{ product.description }}</p>
+
+        <div class="add-to-cart">
+          <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+  </div>
+
+</body>
+</html>
